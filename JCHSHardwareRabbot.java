@@ -52,6 +52,14 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  */
 public class JCHSHardwareRabbot
 {
+    // delete this line
+    // delete this line// delete this line
+    // delete this line
+    // delete this line
+    // delete this line
+    // delete this line
+    // delete this line
+    // delete this line TODO
     /* Public OpMode members. */
     public DcMotor  leftDrive   = null;
     public DcMotor  rightDrive  = null;

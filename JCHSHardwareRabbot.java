@@ -44,20 +44,29 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * This hardware class assumes the following device names have been configured on the robot:
  * Note:  All names are lower case and some have single spaces between words.
  *
- * Motor channel:  Left  drive motor:        "left_drive"
- * Motor channel:  Right drive motor:        "right_drive"
- * Motor channel:  Manipulator drive motor:  "left_arm"
- * Servo channel:  Servo to open left claw:  "left_hand"
- * Servo channel:  Servo to open right claw: "right_hand"
+ * Motor channel:  Left front  drive motor:  "left_front_drive"
+ * Motor channel:  Right front drive motor:  "right_front_drive"
+ * Motor channel:  Left back drive motor:    "left_back_drive"
+ * Motor channel:  Right back drive motor:   "right_back_drive"
+ * Motor channel:  Intake motor:             "intake_wheel"
+ * Motor channel:  Shooter motor:            "shooter_wheel"
+ * Servo channel:  Wobble holding arm:       "wobble_arm"
+ * Servo channel:  Wobble holding claw:      "wobble_claw"
+ * Servo channel:  Servo to angle the ramp:  "shooter_angler"
  */
 public class JCHSHardwareRabbot
 {
     /* Public OpMode members. */
-    public DcMotor  leftDrive   = null;
-    public DcMotor  rightDrive  = null;
-    // public DcMotor  leftArm     = null;
-    public Servo    leftClaw    = null;
-    public Servo    rightClaw   = null;
+    public DcMotor leftFrontDrive = null;
+    public DcMotor rightFrontDrive = null;
+    public DcMotor leftBackDrive = null;
+    public DcMotor rightBackDrive = null;
+    public DcMotor intakeWheel = null;
+    public DcMotor shooterWheel = null;
+
+    public Servo wobbleArm = null;
+    public Servo wobbleClaw = null;
+    public Servo shooterAngler = null;
 
     public static final double MID_SERVO       =  0.5 ;
     public static final double ARM_UP_POWER    =  0.45 ;
@@ -78,28 +87,45 @@ public class JCHSHardwareRabbot
         hwMap = ahwMap;
 
         // Define and Initialize Motors
-        leftDrive  = hwMap.get(DcMotor.class, "left_drive");
-        rightDrive = hwMap.get(DcMotor.class, "right_drive");
-        // leftArm    = hwMap.get(DcMotor.class, "left_arm");
-        leftDrive.setDirection(DcMotor.Direction.FORWARD); // Set to REVERSE if using AndyMark motors
-        rightDrive.setDirection(DcMotor.Direction.REVERSE);// Set to FORWARD if using AndyMark motors
+        leftFrontDrive = hwMap.get(DcMotor.class, "left_front_drive");
+        rightFrontDrive = hwMap.get(DcMotor.class, "right_front_drive");
+        leftBackDrive = hwMap.get(DcMotor.class, "left_back_drive");
+        rightBackDrive = hwMap.get(DcMotor.class, "right_back_drive");
+        intakeWheel = hwMap.get(DcMotor.class, "intake_wheel");
+        shooterWheel = hwMap.get(DcMotor.class, "shooter_wheel");
+
+        leftFrontDrive.setDirection(DcMotor.Direction.FORWARD); // Set to REVERSE if using AndyMark motors
+        rightFrontDrive.setDirection(DcMotor.Direction.REVERSE);// Set to FORWARD if using AndyMark motors
+        leftBackDrive.setDirection(DcMotor.Direction.FORWARD); // Set to REVERSE if using AndyMark motors
+        rightBackDrive.setDirection(DcMotor.Direction.REVERSE);// Set to FORWARD if using AndyMark motors
+
+        intakeWheel.setDirection(DcMotor.Direction.FORWARD); // TODO: Test the direction
+        shooterWheel.setDirection(DcMotor.Direction.REVERSE);// TODO: Test the direction
 
         // Set all motors to zero power
-        leftDrive.setPower(0);
-        rightDrive.setPower(0);
-        // leftArm.setPower(0);
+        leftFrontDrive.setPower(0);
+        rightFrontDrive.setPower(0);
+        leftBackDrive.setPower(0);
+        rightBackDrive.setPower(0);
+        intakeWheel.setPower(0);
+        shooterWheel.setPower(0);
 
         // Set all motors to run without encoders.
         // May want to use RUN_USING_ENCODERS if encoders are installed.
-        leftDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        rightDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        // leftArm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        leftFrontDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        rightFrontDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        leftBackDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        rightBackDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        intakeWheel.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        shooterWheel.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         // Define and initialize ALL installed servos.
-        leftClaw  = hwMap.get(Servo.class, "left_hand");
-        rightClaw = hwMap.get(Servo.class, "right_hand");
-        leftClaw.setPosition(MID_SERVO);
-        rightClaw.setPosition(MID_SERVO);
+        wobbleArm  = hwMap.get(Servo.class, "wobble_arm");
+        wobbleClaw = hwMap.get(Servo.class, "wobble_claw");
+        shooterAngler = hwMap.get(Servo.class, "shooter_angler");
+        wobbleArm.setPosition(MID_SERVO);
+        wobbleClaw.setPosition(MID_SERVO);
+        shooterAngler.setPosition(MID_SERVO);
     }
  }
 

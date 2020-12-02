@@ -66,7 +66,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 public class JCHSRabbotAutonomous extends LinearOpMode {
 
     /* Declare OpMode members. */
-    JCHSHardwareRabbot robot   = new JCHSHardwareRabbot();   // Use a Pushbot's hardware
+    JCHSHardwareRabbot      rabbot = new JCHSHardwareRabbot();   // Use a Pushbot's hardware
     private ElapsedTime     runtime = new ElapsedTime();
 
     static final double     COUNTS_PER_MOTOR_REV    = 1440 ;    // eg: TETRIX Motor Encoder
@@ -84,7 +84,7 @@ public class JCHSRabbotAutonomous extends LinearOpMode {
          * Initialize the drive system variables.
          * The init() method of the hardware class does all the work here
          */
-        robot.init(hardwareMap);
+        rabbot.init(hardwareMap);
 /*
         // Send telemetry message to signify robot waiting;
         telemetry.addData("Status", "Resetting Encoders");    //
@@ -98,12 +98,12 @@ public class JCHSRabbotAutonomous extends LinearOpMode {
 */
         // Send telemetry message to indicate successful Encoder reset
         telemetry.addData("Path0", "Starting at %7d :%7d :%7d :%7d :%7d :%7d",
-                robot.leftFrontDrive.getCurrentPosition(),
-                robot.rightFrontDrive.getCurrentPosition(),
-                robot.leftBackDrive.getCurrentPosition(),
-                robot.rightBackDrive.getCurrentPosition(),
-                robot.intakeWheel.getCurrentPosition(),
-                robot.shooterWheel.getCurrentPosition());
+                rabbot.leftFrontDrive.getCurrentPosition(),
+                rabbot.rightFrontDrive.getCurrentPosition(),
+                rabbot.leftBackDrive.getCurrentPosition(),
+                rabbot.rightBackDrive.getCurrentPosition(),
+                rabbot.intakeWheel.getCurrentPosition(),
+                rabbot.shooterWheel.getCurrentPosition());
         telemetry.update();
 
         // Wait for the game to start (driver presses PLAY)
@@ -112,13 +112,31 @@ public class JCHSRabbotAutonomous extends LinearOpMode {
         // Step through each leg of the path,
         // Note: Reverse movement is obtained by setting a negative distance (not speed)
         encoderDrive(DRIVE_SPEED,  48,  48, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
-        encoderDrive(TURN_SPEED,   12, -12, 4.0);  // S2: Turn Right 12 Inches with 4 Sec timeout
-        encoderDrive(DRIVE_SPEED, -24, -24, 4.0);  // S3: Reverse 24 Inches with 4 Sec timeout
+        // encoderDrive(TURN_SPEED,   12, -12, 4.0);  // S2: Turn Right 12 Inches with 4 Sec timeout
+        // encoderDrive(DRIVE_SPEED, -24, -24, 4.0);  // S3: Reverse 24 Inches with 4 Sec timeout
 
-        robot.wobbleArm.setPosition(1.0);            // S4: Stop and close the claw.
-        robot.wobbleClaw.setPosition(0.0); // TODO: Test whether this opens or closes the servos
-        robot.shooterAngler.setPosition(0.0);
+        rabbot.intakeWheel.setPower(.8);
+        sleep(2000);     // pause for intake wheel to move
+        rabbot.intakeWheel.setPower(0);
+
+        rabbot.shooterWheel.setPower(.8);
+        sleep(2000);     // pause for shooter wheel to move
+        rabbot.shooterWheel.setPower(0);
+
+        rabbot.wobbleArm.setPosition(1.0);            // S4: Stop and close the claw.
+        sleep(1000);     // pause for servo to move
+        rabbot.wobbleArm.setPosition(0.0);            // S4: Stop and close the claw.
+        sleep(1000);     // pause for servo to move
+        rabbot.wobbleClaw.setPosition(0.0); // TODO: Test whether this opens or closes the servos
+        sleep(1000);     // pause for servo to move
+        rabbot.wobbleClaw.setPosition(10.0); // TODO: Test whether this opens or closes the servos
         sleep(1000);     // pause for servos to move
+        rabbot.wobbleClaw.setPosition(-10.0); // TODO: Test whether this opens or closes the servos
+        sleep(1000);     // pause for servo to move
+        rabbot.shooterAngler.setPosition(0.0);
+        sleep(1000);     // pause for servo to move
+        rabbot.shooterAngler.setPosition(1.0);
+        sleep(1000);     // pause for servo to move
 
         telemetry.addData("Path", "Complete");
         telemetry.update();
@@ -142,23 +160,25 @@ public class JCHSRabbotAutonomous extends LinearOpMode {
         if (opModeIsActive()) {
 
             // Determine new target position, and pass to motor controller
-            newLeftTarget = robot.leftFrontDrive.getCurrentPosition() + (int)(leftInches * COUNTS_PER_INCH);
-            newRightTarget = robot.rightFrontDrive.getCurrentPosition() + (int)(rightInches * COUNTS_PER_INCH);
-            robot.leftFrontDrive.setTargetPosition(newLeftTarget);
-            robot.rightFrontDrive.setTargetPosition(newRightTarget);
+            newLeftTarget = rabbot.leftFrontDrive.getCurrentPosition() + (int)(leftInches * COUNTS_PER_INCH);
+            newRightTarget = rabbot.rightFrontDrive.getCurrentPosition() + (int)(rightInches * COUNTS_PER_INCH);
+            rabbot.leftFrontDrive.setTargetPosition(newLeftTarget);
+            rabbot.rightFrontDrive.setTargetPosition(newRightTarget);
+            rabbot.leftBackDrive.setTargetPosition(newLeftTarget);
+            rabbot.rightBackDrive.setTargetPosition(newRightTarget);
 
             // Turn On RUN_TO_POSITION
-            robot.leftFrontDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            robot.rightFrontDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            robot.leftBackDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            robot.rightBackDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            rabbot.leftFrontDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            rabbot.rightFrontDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            rabbot.leftBackDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            rabbot.rightBackDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
             // reset the timeout time and start motion.
             runtime.reset();
-            robot.leftFrontDrive.setPower(Math.abs(speed));
-            robot.rightFrontDrive.setPower(Math.abs(speed));
-            robot.leftBackDrive.setPower(Math.abs(speed));
-            robot.rightBackDrive.setPower(Math.abs(speed));
+            rabbot.leftFrontDrive.setPower(Math.abs(speed));
+            rabbot.rightFrontDrive.setPower(Math.abs(speed));
+            rabbot.leftBackDrive.setPower(Math.abs(speed));
+            rabbot.rightBackDrive.setPower(Math.abs(speed));
 
             // keep looping while we are still active, and there is time left, and both motors are running.
             // Note: We use (isBusy() && isBusy()) in the loop test, which means that when EITHER motor hits
@@ -168,31 +188,32 @@ public class JCHSRabbotAutonomous extends LinearOpMode {
             // onto the next step, use (isBusy() || isBusy()) in the loop test.
             while (opModeIsActive() &&
                    (runtime.seconds() < timeoutS) &&
-                   (robot.leftFrontDrive.isBusy() && robot.rightFrontDrive.isBusy())) {
+                   (rabbot.leftFrontDrive.isBusy() && rabbot.rightFrontDrive.isBusy()) &&
+                   (rabbot.leftBackDrive.isBusy() && rabbot.rightBackDrive.isBusy())) {
 
                 // Display it for the driver.
                 telemetry.addData("Path1",  "Running to %7d :%7d", newLeftTarget,  newRightTarget);
                 telemetry.addData("Path2",  "Running at %7d :%7d :%7d :%7d",
-                                            robot.leftFrontDrive.getCurrentPosition(),
-                                            robot.rightFrontDrive.getCurrentPosition(),
-                                            robot.leftBackDrive.getCurrentPosition(),
-                                            robot.rightBackDrive.getCurrentPosition());
+                                            rabbot.leftFrontDrive.getCurrentPosition(),
+                                            rabbot.rightFrontDrive.getCurrentPosition(),
+                                            rabbot.leftBackDrive.getCurrentPosition(),
+                                            rabbot.rightBackDrive.getCurrentPosition());
                 telemetry.update();
             }
 
             // Stop all motion;
-            robot.leftFrontDrive.setPower(0);
-            robot.rightFrontDrive.setPower(0);
-            robot.leftBackDrive.setPower(0);
-            robot.rightBackDrive.setPower(0);
-            robot.intakeWheel.setPower(0);
-            robot.shooterWheel.setPower(0);
+            rabbot.leftFrontDrive.setPower(0);
+            rabbot.rightFrontDrive.setPower(0);
+            rabbot.leftBackDrive.setPower(0);
+            rabbot.rightBackDrive.setPower(0);
+            rabbot.intakeWheel.setPower(0);
+            rabbot.shooterWheel.setPower(0);
 
             // Turn off RUN_TO_POSITION
-            robot.leftFrontDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            robot.rightFrontDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            robot.leftBackDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            robot.rightBackDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            rabbot.leftFrontDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            rabbot.rightFrontDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            rabbot.leftBackDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            rabbot.rightBackDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
             //  sleep(250);   // optional pause after each move
         }

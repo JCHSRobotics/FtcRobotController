@@ -123,6 +123,7 @@ public class JCHSHardwareRabbot
         wobbleArm  = hwMap.get(Servo.class, "wobble_arm");
         wobbleClaw = hwMap.get(Servo.class, "wobble_claw");
         shooterAngler = hwMap.get(Servo.class, "shooter_angler");
+
         wobbleArm.setPosition(MID_SERVO);
         wobbleClaw.setPosition(MID_SERVO);
         shooterAngler.setPosition(MID_SERVO);

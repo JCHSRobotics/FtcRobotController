@@ -29,6 +29,7 @@
 
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.ftccommon.SoundPlayer;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -43,10 +44,10 @@ import java.util.List;
 /**
  * This 2020-2021 OpMode illustrates the basics of using the TensorFlow Object Detection API to
  * determine the position of the Ultimate Goal game elements.
- *
+ * <p>
  * Use Android Studio to Copy this Class, and Paste it into your team's code folder with a new name.
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list.
- *
+ * <p>
  * IMPORTANT: In order to use this OpMode, you need to obtain your own Vuforia license key as
  * is explained below.
  */
@@ -57,10 +58,23 @@ public class JCHSConceptTensorFlowObjectDetectionWebcam extends JCHSRabbotAutono
     private static final String LABEL_FIRST_ELEMENT = "Quad";
     private static final String LABEL_SECOND_ELEMENT = "Single";
 
+    private boolean silverFound;      // Sound file present flags
+    private boolean goldFound;
+
+    private final int silverSoundID =
+            hardwareMap.appContext.getResources().getIdentifier(
+                    "silver", "raw", hardwareMap.appContext.getPackageName());
+    private final int goldSoundID   =
+            hardwareMap.appContext.getResources().getIdentifier(
+                    "gold",   "raw", hardwareMap.appContext.getPackageName());
+
     /*
-     * IMPORTANT: You need to obtain your own license key to use Vuforia. The string below with which
-     * 'parameters.vuforiaLicenseKey' is initialized is for illustration only, and will not function.
-     * A Vuforia 'Development' license key, can be obtained free of charge from the Vuforia developer
+     * IMPORTANT: You need to obtain your own license key to use Vuforia. The string below with
+     * which
+     * 'parameters.vuforiaLicenseKey' is initialized is for illustration only, and will not
+     * function.
+     * A Vuforia 'Development' license key, can be obtained free of charge from the Vuforia
+     * developer
      * web site at https://developer.vuforia.com/license-manager.
      *
      * Vuforia license keys are always 380 characters long, and look as if they contain mostly
@@ -69,8 +83,9 @@ public class JCHSConceptTensorFlowObjectDetectionWebcam extends JCHSRabbotAutono
      * Once you've obtained a license key, copy the string from the Vuforia web site
      * and paste it in to your code on the next line, between the double quotes.
      */
-    private static final String VUFORIA_KEY =
-            " -- YOUR NEW VUFORIA KEY GOES HERE  --- ";
+    private static final String VUFORIA_KEY = "AdnLowb/////AAABmZNRoOYqak4+lc8AgsQ5vBMOIRDeD" +
+            "+0zoGNlSa//jZJWI6XfuWDNNrQY6PRX55edReDvHQXYkMdN" +
+            "+8nKqohfB8rn2AbVxq4LUeoe67LM4u5NVBGGS5teWMKQbXtqtRBgOkHRCgghllRNAfCOxKNdTT13e6fGNo8tgwQTwKiWHkNylKCBtlaS6ImDNRHQQ1Y1FBu7gr6qWlbvydsPZhnu1VDLMgUxNmK4HaYr/8Xm1865QBaPW9ePFPjHBuHm3h4k0M3Cj19QY2qbLJisNvH+uhkZF3PRxmGJiaeKxM8CkiDCj1JVvYhmjK/enFYGES7eVv4SYvmdizpJNtBrovFelExh25BKICZrdtWPkVm3zXDI";
 
     /**
      * {@link #vuforia} is the variable we will use to store our instance of the Vuforia
@@ -91,25 +106,38 @@ public class JCHSConceptTensorFlowObjectDetectionWebcam extends JCHSRabbotAutono
         initVuforia();
         initTfod();
 
-        /**
+        /*
          * Activate TensorFlow Object Detection before we wait for the start command.
          * Do it here so that the Camera Stream window will have the TensorFlow annotations visible.
          **/
         if (tfod != null) {
             tfod.activate();
 
-            // The TensorFlow software will scale the input images from the camera to a lower resolution.
+            // The TensorFlow software will scale the input images from the camera to a lower
+            // resolution.
             // This can result in lower detection accuracy at longer distances (> 55cm or 22").
-            // If your target is at distance greater than 50 cm (20") you can adjust the magnification value
-            // to artificially zoom in to the center of image.  For best results, the "aspectRatio" argument
-            // should be set to the value of the images used to create the TensorFlow Object Detection model
+            // If your target is at distance greater than 50 cm (20") you can adjust the
+            // magnification value
+            // to artificially zoom in to the center of image.  For best results, the
+            // "aspectRatio" argument
+            // should be set to the value of the images used to create the TensorFlow Object
+            // Detection model
             // (typically 1.78 or 16/9).
 
-            // Uncomment the following line if you want to adjust the magnification and/or the aspect ratio of the input images.
+            // Uncomment the following line if you want to adjust the magnification and/or the
+            // aspect ratio of the input images.
             //tfod.setZoom(2.5, 1.78);
         }
 
-        /** Wait for the game to begin */
+        // initialize sounds
+        if (silverSoundID != 0) {
+            silverFound = SoundPlayer.getInstance().preload(hardwareMap.appContext, silverSoundID);
+        }
+        if (goldSoundID != 0) {
+            goldFound = SoundPlayer.getInstance().preload(hardwareMap.appContext, goldSoundID);
+        }
+
+        /* Wait for the game to begin */
         telemetry.addData(">", "Press Play to start op mode");
         telemetry.update();
         waitForStart();
@@ -117,49 +145,52 @@ public class JCHSConceptTensorFlowObjectDetectionWebcam extends JCHSRabbotAutono
         if (opModeIsActive()) {
             while (opModeIsActive()) {
                 if (tfod != null) {
-                    // getUpdatedRecognitions() will return null if no new information is available since
+                    // getUpdatedRecognitions() will return null if no new information is
+                    // available since
                     // the last time that call was made.
                     List<Recognition> updatedRecognitions = tfod.getUpdatedRecognitions();
                     if (updatedRecognitions != null) {
-                      telemetry.addData("# Object Detected", updatedRecognitions.size());
-                      // step through the list of recognitions and display boundary info.
-                      int i = 0; // TODO: If i == 0 is always true why isn't this final
-                      for (Recognition recognition : updatedRecognitions) {
-                        telemetry.addData(String.format("label (%d)", i), recognition.getLabel());
-                        telemetry.addData(String.format("  left,top (%d)", i), "%.03f , %.03f",
-                                recognition.getLeft(), recognition.getTop());
-                        telemetry.addData(String.format("  right,bottom (%d)", i), "%.03f , %.03f",
-                                recognition.getRight(), recognition.getBottom());
+                        telemetry.addData("# Object Detected", updatedRecognitions.size());
+                        // step through the list of recognitions and display boundary info.
+                        int i = 0; // TODO: If i == 0 is always true why isn't this final
+                        for (Recognition recognition : updatedRecognitions) {
+                            telemetry.addData(String.format("label (%d)", i),
+                                    recognition.getLabel());
+                            telemetry.addData(String.format("  left,top (%d)", i), "%.03f , %" +
+                                    ".03f", recognition.getLeft(), recognition.getTop());
+                            telemetry.addData(String.format("  right,bottom (%d)", i), "%.03f , %" +
+                                    ".03f", recognition.getRight(), recognition.getBottom());
 
-                          // Moves based on which object is detected
-                          switch (recognition.toString()) { // TODO: I don't know if this is the correct method
-                              case TFOD_MODEL_ASSET:
-                                  super.encoderDrive(
-                                              JCHSRabbotAutonomous.DRIVE_SPEED,
-                                              16,
-                                              16,
-                                              5.0);
-                                  break;
-                              case LABEL_FIRST_ELEMENT:
-                                  super.encoderDrive(
-                                          JCHSRabbotAutonomous.DRIVE_SPEED,
-                                          8,
-                                          8,
-                                          5.0);
-                                  break;
-                              case LABEL_SECOND_ELEMENT:
-                                  super.encoderDrive(
-                                          JCHSRabbotAutonomous.DRIVE_SPEED,
-                                          4,
-                                          4,
-                                          5.0);
-                                  break;
-                              default:
-                                  // TODO: Is this possible or should I throw an UnsupportedOperationException
-                                  break;
-                          }
-                      }
-                      telemetry.update();
+                            telemetry.update();
+
+                            // Moves based on which object is detected
+                            switch (recognition.getLabel()) {
+                                case LABEL_FIRST_ELEMENT:
+                                    encoderDrive(JCHSRabbotAutonomous.DRIVE_SPEED, 8, 8, 5.0);
+                                    if (silverFound) {
+                                        SoundPlayer.getInstance().startPlaying(hardwareMap.appContext, silverSoundID);
+                                        telemetry.addData("Playing", "Resource Silver");
+                                        telemetry.update();
+                                    }
+                                    tfod.shutdown();
+                                    break;
+                                case LABEL_SECOND_ELEMENT:
+                                    encoderDrive(JCHSRabbotAutonomous.DRIVE_SPEED, 4, 4, 5.0);
+                                    if (goldFound) {
+                                        SoundPlayer.getInstance().startPlaying(hardwareMap.appContext, goldSoundID);
+                                        telemetry.addData("Playing", "Resource Gold");
+                                        telemetry.update();
+                                    }
+                                    tfod.shutdown();
+                                    break;
+                                case "":
+                                    break;
+                                default:
+                                    // TODO: Is this possible or should I throw an
+                                    //  UnsupportedOperationException
+                                    break;
+                            }
+                        }
                     }
                 }
             }
@@ -193,10 +224,11 @@ public class JCHSConceptTensorFlowObjectDetectionWebcam extends JCHSRabbotAutono
      */
     private void initTfod() {
         int tfodMonitorViewId = hardwareMap.appContext.getResources().getIdentifier(
-            "tfodMonitorViewId", "id", hardwareMap.appContext.getPackageName());
-        TFObjectDetector.Parameters tfodParameters = new TFObjectDetector.Parameters(tfodMonitorViewId);
-       tfodParameters.minResultConfidence = 0.8f;
-       tfod = ClassFactory.getInstance().createTFObjectDetector(tfodParameters, vuforia);
-       tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABEL_FIRST_ELEMENT, LABEL_SECOND_ELEMENT);
+                "tfodMonitorViewId", "id", hardwareMap.appContext.getPackageName());
+        TFObjectDetector.Parameters tfodParameters =
+                new TFObjectDetector.Parameters(tfodMonitorViewId);
+        tfodParameters.minResultConfidence = 0.8f;
+        tfod = ClassFactory.getInstance().createTFObjectDetector(tfodParameters, vuforia);
+        tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABEL_FIRST_ELEMENT, LABEL_SECOND_ELEMENT);
     }
 }

@@ -69,11 +69,14 @@ public class JCHSRabbotAutonomous extends LinearOpMode {
     JCHSHardwareRabbot      rabbot = new JCHSHardwareRabbot();   // Use a Pushbot's hardware
     private ElapsedTime     runtime = new ElapsedTime();
 
-    static final double     COUNTS_PER_MOTOR_REV    = 1440 ;    // eg: TETRIX Motor Encoder
-    static final double     DRIVE_GEAR_REDUCTION    = 2.0 ;     // This is < 1.0 if geared UP
-    static final double     WHEEL_DIAMETER_INCHES   = 4.0 ;     // For figuring circumference
-    static final double     COUNTS_PER_INCH         = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
-                                                      (WHEEL_DIAMETER_INCHES * 3.1415);
+    static final double     COUNTS_PER_MOTOR_REV    = 28.0;    // eg: TETRIX Motor Encoder
+    static final double     DRIVE_GEAR_REDUCTION    = 4.0;     // This is < 1.0 if geared UP
+    static final double     WHEEL_DIAMETER_INCHES   = 4.0;     // For figuring circumference
+    // static final double     FUDGE_FACTOR            = 0.45;
+    static final double     FUDGE_FACTOR            = 1.4;
+    static final double     COUNTS_PER_INCH         = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION * FUDGE_FACTOR) /
+                                                       (WHEEL_DIAMETER_INCHES * 3.1415);
+
     static final double     DRIVE_SPEED             = 0.6;
     static final double     TURN_SPEED              = 0.5;
 
@@ -97,6 +100,7 @@ public class JCHSRabbotAutonomous extends LinearOpMode {
         robot.rightFrontDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 */
         // Send telemetry message to indicate successful Encoder reset
+        /*
         telemetry.addData("Path0", "Starting at %7d :%7d :%7d :%7d :%7d :%7d",
                 rabbot.leftFrontDrive.getCurrentPosition(),
                 rabbot.rightFrontDrive.getCurrentPosition(),
@@ -104,6 +108,12 @@ public class JCHSRabbotAutonomous extends LinearOpMode {
                 rabbot.rightBackDrive.getCurrentPosition(),
                 rabbot.intakeWheel.getCurrentPosition(),
                 rabbot.shooterWheel.getCurrentPosition());
+         */
+        telemetry.addData("Path0", "Starting at %7d :%7d :%7d :%7d",
+                rabbot.leftFrontDrive.getCurrentPosition(),
+                rabbot.rightFrontDrive.getCurrentPosition(),
+                rabbot.leftBackDrive.getCurrentPosition(),
+                rabbot.rightBackDrive.getCurrentPosition());
         telemetry.update();
 
         // Wait for the game to start (driver presses PLAY)
@@ -115,6 +125,8 @@ public class JCHSRabbotAutonomous extends LinearOpMode {
         // encoderDrive(TURN_SPEED,   12, -12, 4.0);  // S2: Turn Right 12 Inches with 4 Sec timeout
         // encoderDrive(DRIVE_SPEED, -24, -24, 4.0);  // S3: Reverse 24 Inches with 4 Sec timeout
 
+
+/*
         rabbot.intakeWheel.setPower(.8);
         sleep(2000);     // pause for intake wheel to move
         rabbot.intakeWheel.setPower(0);
@@ -137,6 +149,7 @@ public class JCHSRabbotAutonomous extends LinearOpMode {
         sleep(1000);     // pause for servo to move
         rabbot.shooterAngler.setPosition(1.0);
         sleep(1000);     // pause for servo to move
+ */
 
         telemetry.addData("Path", "Complete");
         telemetry.update();
@@ -206,8 +219,10 @@ public class JCHSRabbotAutonomous extends LinearOpMode {
             rabbot.rightFrontDrive.setPower(0);
             rabbot.leftBackDrive.setPower(0);
             rabbot.rightBackDrive.setPower(0);
+            /*
             rabbot.intakeWheel.setPower(0);
             rabbot.shooterWheel.setPower(0);
+             */
 
             // Turn off RUN_TO_POSITION
             rabbot.leftFrontDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);

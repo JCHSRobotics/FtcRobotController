@@ -61,12 +61,15 @@ public class JCHSHardwareRabbot
     public DcMotor rightFrontDrive = null;
     public DcMotor leftBackDrive = null;
     public DcMotor rightBackDrive = null;
+
+    /*
     public DcMotor intakeWheel = null;
     public DcMotor shooterWheel = null;
 
     public Servo wobbleArm = null;
     public Servo wobbleClaw = null;
     public Servo shooterAngler = null;
+    */
 
     public static final double MID_SERVO       =  0.5 ;
     public static final double ARM_UP_POWER    =  0.45 ;
@@ -91,24 +94,30 @@ public class JCHSHardwareRabbot
         rightFrontDrive = hwMap.get(DcMotor.class, "right_front_drive");
         leftBackDrive = hwMap.get(DcMotor.class, "left_back_drive");
         rightBackDrive = hwMap.get(DcMotor.class, "right_back_drive");
+        /*
         intakeWheel = hwMap.get(DcMotor.class, "intake_wheel");
         shooterWheel = hwMap.get(DcMotor.class, "shooter_wheel");
+         */
 
         leftFrontDrive.setDirection(DcMotor.Direction.FORWARD); // Set to REVERSE if using AndyMark motors
         rightFrontDrive.setDirection(DcMotor.Direction.REVERSE);// Set to FORWARD if using AndyMark motors
         leftBackDrive.setDirection(DcMotor.Direction.FORWARD); // Set to REVERSE if using AndyMark motors
         rightBackDrive.setDirection(DcMotor.Direction.REVERSE);// Set to FORWARD if using AndyMark motors
 
+        /*
         intakeWheel.setDirection(DcMotor.Direction.FORWARD); // TODO: Test the direction
         shooterWheel.setDirection(DcMotor.Direction.REVERSE);// TODO: Test the direction
+         */
 
         // Set all motors to zero power
         leftFrontDrive.setPower(0);
         rightFrontDrive.setPower(0);
         leftBackDrive.setPower(0);
         rightBackDrive.setPower(0);
+        /*
         intakeWheel.setPower(0);
         shooterWheel.setPower(0);
+        */
 
         // Set all motors to run without encoders.
         // May want to use RUN_USING_ENCODERS if encoders are installed.
@@ -116,6 +125,8 @@ public class JCHSHardwareRabbot
         rightFrontDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         leftBackDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         rightBackDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
+        /*
         intakeWheel.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         shooterWheel.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
@@ -127,6 +138,7 @@ public class JCHSHardwareRabbot
         wobbleArm.setPosition(MID_SERVO);
         wobbleClaw.setPosition(MID_SERVO);
         shooterAngler.setPosition(MID_SERVO);
+         */
     }
  }
 

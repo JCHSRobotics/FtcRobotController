@@ -66,7 +66,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 public class JCHSRabbotAutonomous extends LinearOpMode {
 
     /* Declare OpMode members. */
-    JCHSHardwareRabbot      rabbot = new JCHSHardwareRabbot();   // Use a Pushbot's hardware
+    JCHSHardwareRabbotChassis rabbot = new JCHSHardwareRabbotChassis();   // Use a Pushbot's hardware
     private ElapsedTime     runtime = new ElapsedTime();
 
     static final double     COUNTS_PER_MOTOR_REV    = 28.0;    // eg: TETRIX Motor Encoder
@@ -75,12 +75,14 @@ public class JCHSRabbotAutonomous extends LinearOpMode {
     // static final double     FUDGE_FACTOR            = 0.45;
     static final double     FUDGE_FACTOR            = 1.4;
     static final double     COUNTS_PER_INCH         = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION * FUDGE_FACTOR) /
-                                                       (WHEEL_DIAMETER_INCHES * 3.1415);
+            (WHEEL_DIAMETER_INCHES * 3.1415);
 
     static final double     DRIVE_SPEED             = 0.6;
     static final double     TURN_SPEED              = 0.5;
 
     @Override
+
+
     public void runOpMode() {
 
         /*
@@ -92,10 +94,8 @@ public class JCHSRabbotAutonomous extends LinearOpMode {
         // Send telemetry message to signify robot waiting;
         telemetry.addData("Status", "Resetting Encoders");    //
         telemetry.update();
-
         robot.leftFrontDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.rightFrontDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
         robot.leftFrontDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         robot.rightFrontDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 */
@@ -116,6 +116,7 @@ public class JCHSRabbotAutonomous extends LinearOpMode {
                 rabbot.rightBackDrive.getCurrentPosition());
         telemetry.update();
 
+
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
 
@@ -130,11 +131,9 @@ public class JCHSRabbotAutonomous extends LinearOpMode {
         rabbot.intakeWheel.setPower(.8);
         sleep(2000);     // pause for intake wheel to move
         rabbot.intakeWheel.setPower(0);
-
         rabbot.shooterWheel.setPower(.8);
         sleep(2000);     // pause for shooter wheel to move
         rabbot.shooterWheel.setPower(0);
-
         rabbot.wobbleArm.setPosition(1.0);            // S4: Stop and close the claw.
         sleep(1000);     // pause for servo to move
         rabbot.wobbleArm.setPosition(0.0);            // S4: Stop and close the claw.
@@ -200,17 +199,17 @@ public class JCHSRabbotAutonomous extends LinearOpMode {
             // However, if you require that BOTH motors have finished their moves before the robot continues
             // onto the next step, use (isBusy() || isBusy()) in the loop test.
             while (opModeIsActive() &&
-                   (runtime.seconds() < timeoutS) &&
-                   (rabbot.leftFrontDrive.isBusy() && rabbot.rightFrontDrive.isBusy()) &&
-                   (rabbot.leftBackDrive.isBusy() && rabbot.rightBackDrive.isBusy())) {
+                    (runtime.seconds() < timeoutS) &&
+                    (rabbot.leftFrontDrive.isBusy() && rabbot.rightFrontDrive.isBusy()) &&
+                    (rabbot.leftBackDrive.isBusy() && rabbot.rightBackDrive.isBusy())) {
 
                 // Display it for the driver.
                 telemetry.addData("Path1",  "Running to %7d :%7d", newLeftTarget,  newRightTarget);
                 telemetry.addData("Path2",  "Running at %7d :%7d :%7d :%7d",
-                                            rabbot.leftFrontDrive.getCurrentPosition(),
-                                            rabbot.rightFrontDrive.getCurrentPosition(),
-                                            rabbot.leftBackDrive.getCurrentPosition(),
-                                            rabbot.rightBackDrive.getCurrentPosition());
+                        rabbot.leftFrontDrive.getCurrentPosition(),
+                        rabbot.rightFrontDrive.getCurrentPosition(),
+                        rabbot.leftBackDrive.getCurrentPosition(),
+                        rabbot.rightBackDrive.getCurrentPosition());
                 telemetry.update();
             }
 

@@ -58,6 +58,7 @@ public class JCHSConceptTensorFlowObjectDetectionWebcam extends JCHSRabbotAutono
     private static final String LABEL_FIRST_ELEMENT = "Quad";
     private static final String LABEL_SECOND_ELEMENT = "Single";
 
+    /*
     private boolean silverFound;      // Sound file present flags
     private boolean goldFound;
 
@@ -67,6 +68,7 @@ public class JCHSConceptTensorFlowObjectDetectionWebcam extends JCHSRabbotAutono
     private final int goldSoundID   =
             hardwareMap.appContext.getResources().getIdentifier(
                     "gold",   "raw", hardwareMap.appContext.getPackageName());
+     */
 
     /*
      * IMPORTANT: You need to obtain your own license key to use Vuforia. The string below with
@@ -127,6 +129,7 @@ public class JCHSConceptTensorFlowObjectDetectionWebcam extends JCHSRabbotAutono
             //tfod.setZoom(2.5, 1.78);
         }
 
+        /*
         // initialize sounds
         if (silverSoundID != 0) {
             silverFound = SoundPlayer.getInstance().preload(hardwareMap.appContext, silverSoundID);
@@ -134,6 +137,7 @@ public class JCHSConceptTensorFlowObjectDetectionWebcam extends JCHSRabbotAutono
         if (goldSoundID != 0) {
             goldFound = SoundPlayer.getInstance().preload(hardwareMap.appContext, goldSoundID);
         }
+        */
 
         /* Wait for the game to begin */
         telemetry.addData(">", "Press Play to start op mode");
@@ -165,20 +169,24 @@ public class JCHSConceptTensorFlowObjectDetectionWebcam extends JCHSRabbotAutono
                             switch (recognition.getLabel()) {
                                 case LABEL_FIRST_ELEMENT:
                                     encoderDrive(JCHSRabbotAutonomous.DRIVE_SPEED, 8, 8, 5.0);
+                                    /*
                                     if (silverFound) {
                                         SoundPlayer.getInstance().startPlaying(hardwareMap.appContext, silverSoundID);
                                         telemetry.addData("Playing", "Resource Silver");
                                         telemetry.update();
                                     }
+                                     */
                                     tfod.shutdown();
                                     break;
                                 case LABEL_SECOND_ELEMENT:
                                     encoderDrive(JCHSRabbotAutonomous.DRIVE_SPEED, 4, 4, 5.0);
+                                    /*
                                     if (goldFound) {
                                         SoundPlayer.getInstance().startPlaying(hardwareMap.appContext, goldSoundID);
                                         telemetry.addData("Playing", "Resource Gold");
                                         telemetry.update();
                                     }
+                                    */
                                     tfod.shutdown();
                                     break;
                                 case "":

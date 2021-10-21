@@ -49,13 +49,13 @@ import com.qualcomm.robotcore.util.Range;
  */
 
 @TeleOp(name="Rabbot: Teleop POV", group="Rabbot")
-@Disabled
+//@Disabled
 public class JCHSRabbotTeleopPOV_Linear extends LinearOpMode {
 
     /* Declare OpMode members. */
     JCHSHardwareRabbot rabbot = new JCHSHardwareRabbot();   // Use a Pushbot's hardware
-    double          clawOffset      = 0;                       // Servo mid position
-    final double    CLAW_SPEED      = 0.02 ;                   // sets rate to move servo
+    double             clawOffset      = 0;                       // Servo mid position
+    final double       CLAW_SPEED      = 0.02 ;                   // sets rate to move servo
 
     @Override
     public void runOpMode() {
@@ -63,6 +63,7 @@ public class JCHSRabbotTeleopPOV_Linear extends LinearOpMode {
         double right;
         double drive;
         double turn;
+        double intake;
         double max;
 
         /* Initialize the hardware variables.
@@ -85,6 +86,7 @@ public class JCHSRabbotTeleopPOV_Linear extends LinearOpMode {
             // This way it's also easy to just drive straight, or just turn.
             drive = -gamepad1.left_stick_y;
             turn  =  gamepad1.right_stick_x;
+            intake = gamepad1.right_trigger;
 
             // Combine drive and turn for blended motion.
             left  = drive + turn;
@@ -97,10 +99,18 @@ public class JCHSRabbotTeleopPOV_Linear extends LinearOpMode {
                 left /= max;
                 right /= max;
             }
+            if (intake > 1.0)
+            {
+                intake = 1.0;
+            }
 
             // Output the safe vales to the motor drives.
             rabbot.leftBackDrive.setPower(left);
             rabbot.rightBackDrive.setPower(right);
+            rabbot.leftFrontDrive.setPower(left);
+            rabbot.rightBackDrive.setPower(right);
+            rabbot.leftIntake.setPower(intake);
+            rabbot.rightIntake.setPower(intake);
 
             // Use gamepad left & right Bumpers to open and close the claw
             if (gamepad1.right_bumper)
@@ -114,12 +124,12 @@ public class JCHSRabbotTeleopPOV_Linear extends LinearOpMode {
             //rabbot.rightClaw.setPosition(rabbot.MID_SERVO - clawOffset);
 
             // Use gamepad buttons to move arm up (Y) and down (A)
-            if (gamepad1.y)
-                rabbot.armMotor.setPower(rabbot.ARM_UP_POWER);
-            else if (gamepad1.a)
-                rabbot.armMotor.setPower(rabbot.ARM_DOWN_POWER);
-            else
-                rabbot.armMotor.setPower(0.0);
+//            if (gamepad1.y)
+//                rabbot.armMotor.setPower(rabbot.ARM_UP_POWER);
+//            else if (gamepad1.a)
+//                rabbot.armMotor.setPower(rabbot.ARM_DOWN_POWER);
+//            else
+//                rabbot.armMotor.setPower(0.0);
 
             // Send telemetry message to signify robot running;
             telemetry.addData("claw",  "Offset = %.2f", clawOffset);

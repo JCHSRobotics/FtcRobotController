@@ -88,11 +88,12 @@ public class JCHSHardwareRabbot
         leftFrontDrive  = hwMap.get(DcMotor.class, "left_front_drive");
         rightBackDrive = hwMap.get(DcMotor.class, "right_back_drive");
         rightFrontDrive = hwMap.get(DcMotor.class, "right_front_drive");
-        rightIntake = hwMap.get(DcMotor.class, "right_Intake");
-        leftIntake = hwMap.get(DcMotor.class, "right_Intake");
-        armMotor = hwMap.get(DcMotor.class, "arm_Motor");
-        flyWheel = hwMap.get(DcMotor.class, "fly_Wheel");
+        rightIntake = hwMap.get(DcMotor.class, "right_intake");
+        leftIntake = hwMap.get(DcMotor.class, "left_intake");
+        //armMotor = hwMap.get(DcMotor.class, "arm_motor");
+        //flyWheel = hwMap.get(DcMotor.class, "fly_wheel");
         //leftArm    = hwMap.get(DcMotor.class, "left_arm");
+
         leftBackDrive.setDirection(DcMotor.Direction.FORWARD); // Set to REVERSE if using AndyMark motors
         rightBackDrive.setDirection(DcMotor.Direction.REVERSE);// Set to FORWARD if using AndyMark motors
         leftFrontDrive.setDirection(DcMotor.Direction.FORWARD);
@@ -107,8 +108,8 @@ public class JCHSHardwareRabbot
         rightFrontDrive.setPower(0);
         rightIntake.setPower(0);
         leftIntake.setPower(0);
-        armMotor.setPower(0);
-        flyWheel.setPower(0);
+        //armMotor.setPower(0);
+        //flyWheel.setPower(0);
         //leftArm.setPower(0);
 
         // Set all motors to run without encoders.
@@ -119,9 +120,8 @@ public class JCHSHardwareRabbot
         leftFrontDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         leftIntake.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         rightIntake.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        armMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        flyWheel.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-
+        //armMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        //flyWheel.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         //leftArm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         // Define and initialize ALL installed servos.
@@ -130,5 +130,6 @@ public class JCHSHardwareRabbot
         //leftClaw.setPosition(MID_SERVO);
         //rightClaw.setPosition(MID_SERVO);
     }
- }
+}
+
 

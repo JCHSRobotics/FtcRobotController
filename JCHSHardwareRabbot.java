@@ -53,17 +53,15 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 public class JCHSHardwareRabbot
 {
     /* Public OpMode members. */
-    public DcMotor  leftBackDrive   = null;
-    public DcMotor  rightBackDrive  = null;
-    public DcMotor  rightFrontDrive  = null;
-    public DcMotor  leftFrontDrive = null;
-    public DcMotor  leftIntake = null;
-    public DcMotor  rightIntake = null;
+    public DcMotor  leftDrive   = null;
+    public DcMotor  rightDrive  = null;
+    public DcMotor  rightRamp  = null;
+    public DcMotor  leftRamp = null;
+    public DcMotor  Intake = null;
+    public DcMotor  crateHolder = null;
     public DcMotor  armMotor = null;
     public DcMotor  flyWheel = null;
-    //public DcMotor  leftArm     = null;
-    //public Servo    leftClaw    = null;
-    //public Servo    rightClaw   = null;
+
 
     public static final double MID_SERVO       =  0.5 ;
     public static final double ARM_UP_POWER    =  0.45 ;
@@ -84,45 +82,45 @@ public class JCHSHardwareRabbot
         hwMap = ahwMap;
 
         // Define and Initialize Motors
-        leftBackDrive  = hwMap.get(DcMotor.class, "left_back_drive");
-        leftFrontDrive  = hwMap.get(DcMotor.class, "left_front_drive");
-        rightBackDrive = hwMap.get(DcMotor.class, "right_back_drive");
-        rightFrontDrive = hwMap.get(DcMotor.class, "right_front_drive");
-        rightIntake = hwMap.get(DcMotor.class, "right_intake");
-        leftIntake = hwMap.get(DcMotor.class, "left_intake");
+        leftDrive  = hwMap.get(DcMotor.class, "left_back_drive");
+        rightDrive  = hwMap.get(DcMotor.class, "left_front_drive");
+        rightRamp = hwMap.get(DcMotor.class, "right_back_drive");
+        leftRamp = hwMap.get(DcMotor.class, "right_front_drive");
+        crateHolder = hwMap.get(DcMotor.class, "right_intake");
+        Intake = hwMap.get(DcMotor.class, "left_intake");
         //armMotor = hwMap.get(DcMotor.class, "arm_motor");
         //flyWheel = hwMap.get(DcMotor.class, "fly_wheel");
-        //leftArm    = hwMap.get(DcMotor.class, "left_arm");
 
-        leftBackDrive.setDirection(DcMotor.Direction.FORWARD); // Set to REVERSE if using AndyMark motors
-        rightBackDrive.setDirection(DcMotor.Direction.REVERSE);// Set to FORWARD if using AndyMark motors
-        leftFrontDrive.setDirection(DcMotor.Direction.FORWARD);
-        rightFrontDrive.setDirection(DcMotor.Direction.REVERSE);
-        rightIntake.setDirection(DcMotor.Direction.REVERSE);
-        leftIntake.setDirection(DcMotor.Direction.FORWARD);
+
+        leftDrive.setDirection(DcMotor.Direction.FORWARD); // Set to REVERSE if using AndyMark motors
+        rightDrive.setDirection(DcMotor.Direction.REVERSE);// Set to FORWARD if using AndyMark motors
+        leftRamp.setDirection(DcMotor.Direction.FORWARD);
+        rightRamp.setDirection(DcMotor.Direction.REVERSE);
+        //Intake.setDirection(DcMotor.Direction.REVERSE);
+        Intake.setDirection(DcMotor.Direction.FORWARD);
 
         // Set all motors to zero power
-        leftBackDrive.setPower(0);
-        leftFrontDrive.setPower(0);
-        rightBackDrive.setPower(0);
-        rightFrontDrive.setPower(0);
-        rightIntake.setPower(0);
-        leftIntake.setPower(0);
+        leftDrive.setPower(0);
+        leftRamp.setPower(0);
+        rightDrive.setPower(0);
+        rightRamp.setPower(0);
+        Intake.setPower(0);
+        crateHolder.setPower(0);
         //armMotor.setPower(0);
         //flyWheel.setPower(0);
-        //leftArm.setPower(0);
+
 
         // Set all motors to run without encoders.
         // May want to use RUN_USING_ENCODERS if encoders are installed.
-        leftBackDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        rightBackDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        rightFrontDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        leftFrontDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        leftIntake.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        rightIntake.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        leftDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        rightDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        rightRamp.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        leftRamp.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        crateHolder.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        Intake.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         //armMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         //flyWheel.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        //leftArm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
 
         // Define and initialize ALL installed servos.
         //leftClaw  = hwMap.get(Servo.class, "left_hand");

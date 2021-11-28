@@ -91,28 +91,28 @@ public class JCHSRabbotAutoDriveByEncoder_Linear extends JCHSRabbotAutonomous {
         telemetry.addData("Status", "Resetting Encoders");    //
         telemetry.update();
 
-        rabbot.leftBackDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        rabbot.rightBackDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        rabbot.rightFrontDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        rabbot.leftFrontDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        rabbot.leftIntake.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        rabbot.rightIntake.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rabbot.leftDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rabbot.rightDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rabbot.rightRamp.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rabbot.leftRamp.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rabbot.crateHolder.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rabbot.Intake.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         rabbot.armMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         rabbot.flyWheel.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-        rabbot.leftBackDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        rabbot.rightBackDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        rabbot.rightFrontDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        rabbot.leftFrontDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        rabbot.leftIntake.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        rabbot.rightIntake.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        rabbot.leftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        rabbot.rightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        rabbot.rightRamp.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        rabbot.leftRamp.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        rabbot.Intake.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        rabbot.crateHolder.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         rabbot.armMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         rabbot.flyWheel.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         // Send telemetry message to indicate successful Encoder reset
         telemetry.addData("Path0",  "Starting at %7d :%7d",
-                rabbot.leftBackDrive.getCurrentPosition(),
-                rabbot.rightBackDrive.getCurrentPosition());
+                rabbot.leftDrive.getCurrentPosition(),
+                rabbot.rightDrive.getCurrentPosition());
 
         telemetry.update();
 
@@ -151,29 +151,29 @@ public class JCHSRabbotAutoDriveByEncoder_Linear extends JCHSRabbotAutonomous {
         if (opModeIsActive()) {
 
             // Determine new target position, and pass to motor controller
-            newLeftTarget = rabbot.leftBackDrive.getCurrentPosition() + (int)(leftInches * COUNTS_PER_INCH);
-            newRightTarget = rabbot.rightBackDrive.getCurrentPosition() + (int)(rightInches * COUNTS_PER_INCH);
-            rabbot.leftBackDrive.setTargetPosition(newLeftTarget);
-            rabbot.rightBackDrive.setTargetPosition(newRightTarget);
+            newLeftTarget = rabbot.leftDrive.getCurrentPosition() + (int)(leftInches * COUNTS_PER_INCH);
+            newRightTarget = rabbot.rightDrive.getCurrentPosition() + (int)(rightInches * COUNTS_PER_INCH);
+            rabbot.leftRamp.setTargetPosition(newLeftTarget);
+            rabbot.rightRamp.setTargetPosition(newRightTarget);
 
             // Turn On RUN_TO_POSITION
-            rabbot.leftBackDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            rabbot.rightBackDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            rabbot.leftFrontDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            rabbot.rightFrontDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            rabbot.leftIntake.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            rabbot.rightIntake.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            rabbot.leftDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            rabbot.rightDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            rabbot.leftRamp.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            rabbot.rightRamp.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            rabbot.Intake.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            rabbot.crateHolder.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             rabbot.flyWheel.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             rabbot.armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
             // reset the timeout time and start motion.
             runtime.reset();
-            rabbot.leftBackDrive.setPower(Math.abs(speed));
-            rabbot.rightBackDrive.setPower(Math.abs(speed));
-            rabbot.leftFrontDrive.setPower(Math.abs(speed));
-            rabbot.rightFrontDrive.setPower(Math.abs(speed));
-            rabbot.leftIntake.setPower(Math.abs(speed));
-            rabbot.rightIntake.setPower(Math.abs(speed));
+            rabbot.leftDrive.setPower(Math.abs(speed));
+            rabbot.rightDrive.setPower(Math.abs(speed));
+            rabbot.leftRamp.setPower(Math.abs(speed));
+            rabbot.rightRamp.setPower(Math.abs(speed));
+            rabbot.Intake.setPower(Math.abs(speed));
+            rabbot.crateHolder.setPower(Math.abs(speed));
             rabbot.flyWheel.setPower(Math.abs(speed));
             rabbot.armMotor.setPower(Math.abs(speed));
 
@@ -185,13 +185,13 @@ public class JCHSRabbotAutoDriveByEncoder_Linear extends JCHSRabbotAutonomous {
             // onto the next step, use (isBusy() || isBusy()) in the loop test.
             while (opModeIsActive() &&
                     (runtime.seconds() < timeoutS) &&
-                    (rabbot.leftBackDrive.isBusy() && rabbot.rightBackDrive.isBusy())) {
+                    (rabbot.leftDrive.isBusy() && rabbot.rightDrive.isBusy())) {
 
                 // Display it for the driver.
                 telemetry.addData("Path1",  "Running to %7d :%7d", newLeftTarget,  newRightTarget);
                 telemetry.addData("Path2",  "Running at %7d :%7d",
-                        rabbot.leftBackDrive.getCurrentPosition(),
-                        rabbot.rightBackDrive.getCurrentPosition());
+                        rabbot.leftDrive.getCurrentPosition(),
+                        rabbot.rightDrive.getCurrentPosition());
                         /*
                         //rabbot.leftFrontDrive.getCurrentPosition(),
                         //rabbot.rightFrontDrive.getCurrentPosition());
@@ -204,22 +204,22 @@ public class JCHSRabbotAutoDriveByEncoder_Linear extends JCHSRabbotAutonomous {
             }
 
             // Stop all motion;
-            rabbot.leftBackDrive.setPower(0);
-            rabbot.rightBackDrive.setPower(0);
-            rabbot.leftFrontDrive.setPower(0);
-            rabbot.rightFrontDrive.setPower(0);
-            rabbot.leftIntake.setPower(0);
-            rabbot.rightIntake.setPower(0);
+            rabbot.leftDrive.setPower(0);
+            rabbot.rightDrive.setPower(0);
+            rabbot.leftRamp.setPower(0);
+            rabbot.rightRamp.setPower(0);
+            rabbot.Intake.setPower(0);
+            rabbot.crateHolder.setPower(0);
             rabbot.flyWheel.setPower(0);
             rabbot.armMotor.setPower(0);
 
             // Turn off RUN_TO_POSITION
-            rabbot.leftBackDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            rabbot.rightBackDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            rabbot.leftFrontDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            rabbot.rightFrontDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            rabbot.leftIntake.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            rabbot.rightIntake.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            rabbot.leftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            rabbot.rightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            rabbot.leftRamp.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            rabbot.rightRamp.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            rabbot.Intake.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            rabbot.crateHolder.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             rabbot.flyWheel.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             rabbot.armMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 

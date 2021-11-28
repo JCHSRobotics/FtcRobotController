@@ -105,12 +105,12 @@ public class JCHSRabbotTeleopPOV_Linear extends LinearOpMode {
             }
 
             // Output the safe vales to the motor drives.
-            rabbot.leftBackDrive.setPower(left);
-            rabbot.rightBackDrive.setPower(right);
-            rabbot.leftFrontDrive.setPower(left);
-            rabbot.rightBackDrive.setPower(right);
-            rabbot.leftIntake.setPower(intake);
-            rabbot.rightIntake.setPower(intake);
+            rabbot.leftDrive.setPower(left);
+            rabbot.rightDrive.setPower(right);
+            rabbot.leftRamp.setPower(left);
+            rabbot.rightRamp.setPower(right);
+            rabbot.Intake.setPower(intake);
+            rabbot.crateHolder.setPower(intake);
 
             // Use gamepad left & right Bumpers to open and close the claw
             if (gamepad1.right_bumper)

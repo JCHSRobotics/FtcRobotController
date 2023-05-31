@@ -62,6 +62,7 @@ public class JCHSHardwareRabbotChassis
     public DcMotor rightFrontDrive = null;
     public DcMotor leftBackDrive = null;
     public DcMotor rightBackDrive = null;
+    public Servo clawServo = null;
 
     /* local OpMode members. */
     protected HardwareMap hwMap           =  null;
@@ -82,6 +83,7 @@ public class JCHSHardwareRabbotChassis
         rightFrontDrive = hwMap.get(DcMotor.class, "right_front_drive");
         leftBackDrive = hwMap.get(DcMotor.class, "left_back_drive");
         rightBackDrive = hwMap.get(DcMotor.class, "right_back_drive");
+        clawServo = hwMap.get(Servo.class, "front_servo");
 
         leftFrontDrive.setDirection(DcMotor.Direction.FORWARD); // Set to REVERSE if using AndyMark motors
         rightFrontDrive.setDirection(DcMotor.Direction.REVERSE);// Set to FORWARD if using AndyMark motors
@@ -100,6 +102,7 @@ public class JCHSHardwareRabbotChassis
         rightFrontDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         leftBackDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         rightBackDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
     }
 }
 

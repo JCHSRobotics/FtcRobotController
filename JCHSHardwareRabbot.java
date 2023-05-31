@@ -30,6 +30,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -59,8 +60,15 @@ public class JCHSHardwareRabbot
     public DcMotor  leftRamp = null;
     public DcMotor  Intake = null;
     public DcMotor  crateHolder = null;
-    public DcMotor  armMotor = null;
+    public Servo  arm = null;
+    public DcMotorEx armMotor = null;
+    public DcMotorEx armMotor2 = null;
+    public DcMotor armRotator = null;
     public DcMotor  flyWheel = null;
+    public Servo clawServo = null;
+    public Servo spinServo = null;
+    //public Servo rightClaw = null;
+    //public Servo leftClaw = null;
 
 
     public static final double MID_SERVO       =  0.5 ;
@@ -82,13 +90,21 @@ public class JCHSHardwareRabbot
         hwMap = ahwMap;
 
         // Define and Initialize Motors
-        leftDrive  = hwMap.get(DcMotor.class, "left_back_drive");
-        rightDrive  = hwMap.get(DcMotor.class, "left_front_drive");
+        leftDrive  = hwMap.get(DcMotor.class, "left_front_drive");
+        rightDrive  = hwMap.get(DcMotor.class, "right_front_drive");
         rightRamp = hwMap.get(DcMotor.class, "right_back_drive");
-        leftRamp = hwMap.get(DcMotor.class, "right_front_drive");
+        leftRamp = hwMap.get(DcMotor.class, "left_back_drive");
+        //leftClaw  = hwMap.get(Servo.class, "left_hand");
+        //rightClaw = hwMap.get(Servo.class, "right_hand");
+        clawServo = hwMap.get(Servo.class, "claw");
+        spinServo = hwMap.get(Servo.class, "spinner");
+        /*
         crateHolder = hwMap.get(DcMotor.class, "right_intake");
         Intake = hwMap.get(DcMotor.class, "left_intake");
-        //armMotor = hwMap.get(DcMotor.class, "arm_motor");
+        */
+        armMotor = hwMap.get(DcMotorEx.class, "arm_motor");
+        armMotor2 = hwMap.get(DcMotorEx.class, "arm_motor2");
+        armRotator = hwMap.get(DcMotorEx.class, "arm_rotator");
         //flyWheel = hwMap.get(DcMotor.class, "fly_wheel");
 
 
@@ -96,17 +112,23 @@ public class JCHSHardwareRabbot
         rightDrive.setDirection(DcMotor.Direction.REVERSE);// Set to FORWARD if using AndyMark motors
         leftRamp.setDirection(DcMotor.Direction.FORWARD);
         rightRamp.setDirection(DcMotor.Direction.REVERSE);
+
+
+
         //Intake.setDirection(DcMotor.Direction.REVERSE);
-        Intake.setDirection(DcMotor.Direction.FORWARD);
+        //Intake.setDirection(DcMotor.Direction.FORWARD);
 
         // Set all motors to zero power
         leftDrive.setPower(0);
         leftRamp.setPower(0);
         rightDrive.setPower(0);
         rightRamp.setPower(0);
-        Intake.setPower(0);
-        crateHolder.setPower(0);
-        //armMotor.setPower(0);
+        clawServo.setPosition(MID_SERVO);
+        //leftClaw.setPosition(MID_SERVO);
+        //rightClaw.setPosition(MID_SERVO);
+        // Intake.setPower(0);
+        // crateHolder.setPower(0);
+       // arm.setPosition(MID_SERVO);
         //flyWheel.setPower(0);
 
 
@@ -116,8 +138,14 @@ public class JCHSHardwareRabbot
         rightDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         rightRamp.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         leftRamp.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        crateHolder.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        Intake.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        armMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        armMotor2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+
+
+
+        // crateHolder.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        // Intake.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         //armMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         //flyWheel.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 

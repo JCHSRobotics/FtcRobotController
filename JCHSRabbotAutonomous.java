@@ -63,7 +63,10 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 @Autonomous(name="Rabbot: Chassis Auto Drive", group="Rabbot")
 // @Disabled
-public class JCHSRabbotAutonomous extends LinearOpMode {
+// DEPRECATED
+// DEPRECATED
+// DEPRECATED
+public abstract class JCHSRabbotAutonomous extends LinearOpMode {
 
     /* Declare OpMode members. */
     JCHSHardwareRabbotChassis rabbot = new JCHSHardwareRabbotChassis();   // Use a Pushbot's hardware

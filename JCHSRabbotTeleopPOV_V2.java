@@ -33,7 +33,6 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
 /**
@@ -50,9 +49,9 @@ import com.qualcomm.robotcore.util.Range;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@TeleOp(name="Rabbot: Teleop POV", group="Rabbot")
+@TeleOp(name="Rabbot: Teleop V2", group="Rabbot")
 //@Disabled
-public class JCHSRabbotTeleopPOV_Linear extends LinearOpMode {
+public class JCHSRabbotTeleopPOV_V2 extends LinearOpMode {
 
     /* Declare OpMode members. */
     JCHSHardwareRabbot rabbot = new JCHSHardwareRabbot();   // Use a Pushbot's hardware
@@ -189,22 +188,13 @@ public class JCHSRabbotTeleopPOV_Linear extends LinearOpMode {
             // Use gamepad left & right Bumpers to open and close the claw
             if (gamepad1.right_bumper)
                 //clawOffset += CLAW_SPEED;
-                rabbot.spinServo.setPosition(0.2);
+                rabbot.clawServo.setPosition(1);
                 //rabbot.clawServo.(1);
             else if (gamepad1.left_bumper)
                 //clawOffset -= CLAW_SPEED;
-                rabbot.spinServo.setPosition(0.7);
-            else
-                //rabbot.spinServo.setPosition(0.4);
-            if (gamepad1.b)
-                //clawOffset += CLAW_SPEED;
-                rabbot.clawServo.setPosition(1);
-                //rabbot.clawServo.(1);
-            else if (gamepad1.x)
-                //clawOffset -= CLAW_SPEED;
                 rabbot.clawServo.setPosition(-1);
             else
-                rabbot.clawServo.setPosition(0.5);
+                rabbot.clawServo.setPosition(0.51);
             //rabbot.clawServo.setPosition(0.05);
 
             // Move both servos to new position.  Assume servos are mirror image of each other.
@@ -218,23 +208,9 @@ public class JCHSRabbotTeleopPOV_Linear extends LinearOpMode {
             // Use gamepad buttons to move arm up (Y) and down (A)
             //rabbot.armMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-            if((gamepad1.right_trigger > 0) || (gamepad1.left_trigger > 0))
+            while (gamepad1.right_trigger > 0)
             {
-                rabbotElevator(rabbot.armMotor2, 2552);
-                rabbotElevator(rabbot.armMotor, 2552);
-                //autoDeposit();
-            }
-            if(gamepad1.a)
-            {
-                autoDeposit(true);
-            }
-            if(gamepad1.y)
-            {
-                autoDeposit(false);
-            }
-            /*while (gamepad1.right_trigger > 0)
-            {
-                rabbot.armMotor.setTargetPosition(2552);
+                rabbot.armMotor.setTargetPosition(1800);
                 if (rabbot.armMotor.getCurrentPosition() < rabbot.armMotor.getTargetPosition())
                 {
                     rabbot.armMotor.setVelocity(gamepad1.right_trigger * 2000);
@@ -250,14 +226,14 @@ public class JCHSRabbotTeleopPOV_Linear extends LinearOpMode {
                 }
                 rabbot.armMotor.setTargetPosition(rabbot.armMotor.getCurrentPosition());
             }
-                if (rabbot.armMotor.getCurrentPosition() < rabbot.armMotor.getTargetPosition())
-                {
-                    rabbot.armMotor.setVelocity(6000);
-                }
-                else
-                {
-                    rabbot.armMotor.setVelocity(0);
-                }*/
+            if (rabbot.armMotor.getCurrentPosition() < rabbot.armMotor.getTargetPosition())
+            {
+                rabbot.armMotor.setVelocity(6000);
+            }
+            else
+            {
+                rabbot.armMotor.setVelocity(0);
+            }
 
             /*if (gamepad1.b)
             {
@@ -297,67 +273,6 @@ public class JCHSRabbotTeleopPOV_Linear extends LinearOpMode {
 
             // Pace this loop so jaw action is reasonable speed.
             sleep(50);
-        }
-    }
-    public void rabbotElevator(DcMotor motor, int height) throws InterruptedException
-    {
-        if (gamepad1.right_trigger > 0)
-        {
-            motor.setTargetPosition(height);
-            if (motor.getCurrentPosition() < motor.getTargetPosition())
-            {
-                motor.setPower(gamepad1.right_trigger);
-            }
-            motor.setTargetPosition(rabbot.armMotor.getCurrentPosition());
-        }
-        if (gamepad1.left_trigger > 0)
-        {
-            motor.setTargetPosition(0);
-            if (motor.getCurrentPosition() > motor.getTargetPosition())
-            {
-                motor.setPower(gamepad1.left_trigger);
-            }
-            motor.setTargetPosition(motor.getCurrentPosition());
-        }
-        /*if (motor.getCurrentPosition() < motor.getTargetPosition())
-        {
-            motor.setPower(1);
-        }
-        else
-        {
-            motor.setPower(0);
-        }*/
-    }
-    public void autoDeposit(boolean retracting) throws InterruptedException
-    {
-        ElapsedTime runtime = new ElapsedTime();
-        if(retracting)
-        {
-            while ((runtime.seconds() <= 1.7)) {
-                rabbot.armRotator.setPower(-0.6);
-            }
-            while ((runtime.seconds() <= 2.5 && (runtime.seconds() >= 1.7)))
-            {
-                rabbot.spinServo.setPosition(1);
-                //rabbot.clawServo.setPosition(-1);
-            }
-        }
-        else
-        {
-            while (runtime.seconds() <= 0.7) {
-                rabbot.armRotator.setPower(1);
-            }
-            while ((runtime.seconds() <= 1.4) && (runtime.seconds() >= 0.7)) {
-                rabbot.armRotator.setPower(0.70);
-            }
-            while ((runtime.seconds() <= 2) && (runtime.seconds() >= 1.4)) {
-                rabbot.armRotator.setPower(0.35);
-            }
-            while ((runtime.seconds() <= 2.5) && (runtime.seconds() >= 2))
-            {
-                rabbot.spinServo.setPosition(0);
-                //rabbot.clawServo.setPosition(1);
-            }
         }
     }
 }
